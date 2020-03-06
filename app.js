@@ -3,6 +3,10 @@ const express = require('express')
 const fs = require('fs')
 const app = express()
 app.use(express.json())
+app.use((req, res, next) => {
+  req.requestedAt = new Date().toLocaleString()
+  next()
+})
 const tours = JSON.parse(
   fs.readFileSync(`./dev-data/data/tours-simple.json`, 'utf-8')
 )
@@ -12,6 +16,7 @@ const getAllTours = (req, res) => {
     status: 'success',
     result: tours.length,
     data: {
+      requestedAt: req.requestedAt,
       tours
     }
   })
@@ -50,15 +55,53 @@ const createTour = (req, res) => {
   )
   res.send('Ok')
 }
-app
-  .route('/api/v1/tours')
+const getAllUsers = (req, res) => {
+  res.status(500).json({
+    status: 'Internal Error'
+  })
+}
+const createUser = (req, res) => {
+  res.status(500).json({
+    status: 'Internal Error'
+  })
+}
+const getUser = (req, res) => {
+  res.status(500).json({
+    status: 'Internal Error'
+  })
+}
+const updateUser = (req, res) => {
+  res.status(500).json({
+    status: 'Internal Error'
+  })
+}
+const deleteUser = (req, res) => {
+  res.status(500).json({
+    status: 'Internal Error'
+  })
+}
+const tourRoutes = express.Router()
+const userRoutes = express.Router()
+tourRoutes
+  .route('/')
   .get(getAllTours)
   .post(createTour)
-app
-  .route('/api/v1/tours/:id')
+tourRoutes
+  .route('/:id')
   .get(getTour)
   .patch(updateTour)
   .delete(deleteTour)
+userRoutes
+  .route('/')
+  .get(getAllUsers)
+  .post(createUser)
+userRoutes
+  .route('/:id')
+  .get(getUser)
+  .patch(updateUser)
+  .delete(deleteUser)
+app.use('/api/v1/tours', tourRoutes)
+app.use('/api/v1/users', userRoutes)
 
 app.listen(3000, () => {
   console.log('Connecting to server')
