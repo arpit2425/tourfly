@@ -12,7 +12,23 @@ exports.getAllTours = async (req, res) => {
     let queryString = JSON.stringify(queryObject);
     queryString = queryString.replace(/\b(gte|gt|lte|lt)\b/g, el => `$${el}`);
 
-    const query = tourModel.find(JSON.parse(queryString));
+    let query = tourModel.find(JSON.parse(queryString));
+    if (req.query.sort) {
+      const sortStr = req.query.sort.split(',').join(' ');
+
+      query = query.sort(sortStr);
+    }
+    if (req.query.fields) {
+      const fieldStr = req.query.fields.split(',').join(' ');
+
+      query = query.select(fieldStr);
+    }
+
+    const page = req.query.page * 1 || 1;
+    const limit = req.query.limit * 1 || 100;
+
+    const skip = (page - 1) * limit;
+    query = query.skip(skip).limit(limit);
 
     const tours = await query;
     res.status(201).json({
