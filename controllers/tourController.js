@@ -6,7 +6,15 @@ const tours = JSON.parse(
 
 exports.getAllTours = async (req, res) => {
   try {
-    const tours = await tourModel.find();
+    const queryObject = { ...req.query };
+    const exclude = ['page', 'sort', 'limit', 'fields'];
+    exclude.forEach(ele => delete queryObject[ele]);
+    let queryString = JSON.stringify(queryObject);
+    queryString = queryString.replace(/\b(gte|gt|lte|lt)\b/g, el => `$${el}`);
+
+    const query = tourModel.find(JSON.parse(queryString));
+
+    const tours = await query;
     res.status(201).json({
       status: 'Success',
       result: tours.length,
