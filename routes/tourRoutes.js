@@ -6,6 +6,7 @@ tourRoutes.param('id', (req, res, next, val) => {
   next();
 });
 tourRoutes.route('/tour-stats').get(tourController.getTourStat);
+tourRoutes.route('/tour-plan/:year').get(tourController.getMonthlyTours);
 tourRoutes.route('/top-5').get(tourController.top5, tourController.getAllTours);
 tourRoutes
   .route('/')

@@ -12,5 +12,11 @@ app.use((req, res, next) => {
 
 app.use('/api/v1/tours', tourRoutes);
 app.use('/api/v1/users', userRoutes);
+app.all('*', (req, res, next) => {
+  res.status(501).json({
+    status: 'fail',
+    message: 'Route not defined'
+  });
+});
 
 module.exports = app;
