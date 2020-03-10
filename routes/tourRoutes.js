@@ -5,6 +5,8 @@ tourRoutes.param('id', (req, res, next, val) => {
   console.log(val);
   next();
 });
+tourRoutes.route('/tour-stats').get(tourController.getTourStat);
+tourRoutes.route('/top-5').get(tourController.top5, tourController.getAllTours);
 tourRoutes
   .route('/')
   .get(tourController.getAllTours)
