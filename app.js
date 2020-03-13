@@ -1,10 +1,12 @@
 const express = require('express');
 const tourRoutes = require('./routes/tourRoutes');
+const cors = require('cors');
 const userRoutes = require('./routes/userRoutes');
 const globalErrorHandler = require('./controllers/errorController');
 const appError = require('./utils/appError');
 const app = express();
 app.use(express.static(`${__dirname}/public`));
+app.use(cors());
 app.use(express.json());
 app.use((req, res, next) => {
   req.requestedAt = new Date().toLocaleString();
