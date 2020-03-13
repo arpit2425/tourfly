@@ -3,6 +3,7 @@ const userRoutes = express.Router();
 const userController = require('./../controllers/userController');
 const authController = require('./../controllers/authController');
 userRoutes.route('/signup').post(authController.signup);
+userRoutes.post('/login', authController.login);
 userRoutes
   .route('/')
   .get(userController.getAllUsers)

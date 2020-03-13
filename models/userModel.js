@@ -73,26 +73,26 @@ userSchema.pre('save', async function(next) {
 //   next();
 // });
 
-// userSchema.methods.correctPassword = async function(
-//   candidatePassword,
-//   userPassword
-// ) {
-//   return await bcrypt.compare(candidatePassword, userPassword);
-// };
+userSchema.methods.correctPassword = async function(
+  candidatePassword,
+  userPassword
+) {
+  return await bcrypt.compare(candidatePassword, userPassword);
+};
 
-// userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
-//   if (this.passwordChangedAt) {
-//     const changedTimestamp = parseInt(
-//       this.passwordChangedAt.getTime() / 1000,
-//       10
-//     );
+userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
+  if (this.passwordChangedAt) {
+    const changedTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
 
-//     return JWTTimestamp < changedTimestamp;
-//   }
+    return JWTTimestamp < changedTimestamp;
+  }
 
-//   // False means NOT changed
-//   return false;
-// };
+  // False means NOT changed
+  return false;
+};
 
 // userSchema.methods.createPasswordResetToken = function() {
 //   const resetToken = crypto.randomBytes(32).toString('hex');
