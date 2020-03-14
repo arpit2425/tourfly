@@ -3,6 +3,7 @@ const rateLimit = require('express-rate-limit');
 const tourRoutes = require('./routes/tourRoutes');
 const cors = require('cors');
 const helmet = require('helmet');
+const reviewRoutes = require('./routes/reviewRoutes');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const mongoSanitize = require('express-mongo-sanitize');
@@ -41,6 +42,7 @@ app.use((req, res, next) => {
 
 app.use('/api/v1/tours', tourRoutes);
 app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/reviews', reviewRoutes);
 app.all('*', (req, res, next) => {
   // const err = new Error('Route not defined');
   // err.status = 'Fail';
