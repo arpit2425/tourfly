@@ -63,5 +63,16 @@ exports.protect = catchAsync(async (req, res, next) => {
   if (freshUser.changedPasswordAfter(decode.iat)) {
     return next(new appError('Password is changed', 401));
   }
+  req.user = freshUser;
   next();
 });
+exports.restrictTo = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return next(
+        new appError('You dont have permission to perform this action', 403)
+      );
+    }
+    next();
+  };
+};
