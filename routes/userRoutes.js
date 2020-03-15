@@ -6,13 +6,21 @@ userRoutes.route('/signup').post(authController.signup);
 userRoutes.post('/login', authController.login);
 userRoutes.post('/forgetPassword', authController.forgetPassword);
 userRoutes.patch('/resetPassword/:token', authController.resetPassword);
+userRoutes.use(authController.protect);
 userRoutes.patch(
   '/updatePassword',
-  authController.protect,
+
   authController.updatePassword
 );
-userRoutes.patch('/updateMe', authController.protect, userController.updateMe);
-userRoutes.delete('/deleteMe', authController.protect, userController.deleteMe);
+userRoutes.patch('/updateMe', userController.updateMe);
+userRoutes.delete('/deleteMe', userController.deleteMe);
+userRoutes.get(
+  '/me',
+
+  userController.getMe,
+  userController.getUser
+);
+userRoutes.use(authController.restrictTo('admin'));
 userRoutes
   .route('/')
   .get(userController.getAllUsers)

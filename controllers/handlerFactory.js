@@ -74,7 +74,7 @@ exports.getAll = Model =>
     const features = new APIFeatures(Model.find(filter), req.query)
       .filter()
       .sort()
-      .limitFields()
+      .limitfield()
       .paginate();
     // const doc = await features.query.explain();
     const doc = await features.query;

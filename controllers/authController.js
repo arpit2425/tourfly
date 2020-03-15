@@ -73,12 +73,12 @@ exports.protect = catchAsync(async (req, res, next) => {
   if (freshUser.changedPasswordAfter(decode.iat)) {
     return next(new appError('Password is changed', 401));
   }
-  req.users = freshUser;
+  req.user = freshUser;
   next();
 });
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
-    if (!roles.includes(req.users.role)) {
+    if (!roles.includes(req.user.role)) {
       return next(
         new appError('You dont have permission to perform this action', 403)
       );
@@ -141,7 +141,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
     return next(new appError('Please enter password', 400));
   }
 
-  const getuser = await user.findById(req.users._id).select('+password');
+  const getuser = await user.findById(req.user._id).select('+password');
 
   if (!(await getuser.correctPassword(req.body.password, getuser.password))) {
     return next(new appError('Password incorrect', 400));

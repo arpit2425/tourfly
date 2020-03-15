@@ -10,16 +10,40 @@ tourRoutes.param('id', (req, res, next, val) => {
   next();
 });
 tourRoutes.route('/tour-stats').get(tourController.getTourStat);
-tourRoutes.route('/tour-plan/:year').get(tourController.getMonthlyTours);
+tourRoutes
+  .route('/tour-plan/:year')
+  .get(
+    authController.protect,
+    authController.restrictTo('admin'),
+    tourController.getMonthlyTours
+  );
 tourRoutes.route('/top-5').get(tourController.top5, tourController.getAllTours);
 tourRoutes
+  .route('/tours-within/:distance/center/:latlng/unit/:unit')
+  .get(tourController.getToursWithin);
+// /tours-within?distance=233&center=-40,45&unit=mi
+// /tours-within/233/center/-40,45/unit/mi
+
+tourRoutes
+  .route('/distances/:latlng/unit/:unit')
+  .get(tourController.getDistances);
+
+tourRoutes
   .route('/')
-  .get(authController.protect, tourController.getAllTours)
-  .post(tourController.createTour);
+  .get(tourController.getAllTours)
+  .post(
+    authController.protect,
+    authController.restrictTo('admin'),
+    tourController.createTour
+  );
 tourRoutes
   .route('/:id')
   .get(tourController.getTour)
-  .patch(tourController.updateTour)
+  .patch(
+    authController.protect,
+    authController.restrictTo('admin'),
+    tourController.updateTour
+  )
   .delete(
     authController.protect,
     authController.restrictTo('admin'),
