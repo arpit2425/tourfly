@@ -2,6 +2,9 @@ const express = require('express');
 const tourController = require('./../controllers/tourController');
 const tourRoutes = express.Router();
 const authController = require('./../controllers/authController');
+const reviewRouter = require('./../routes/reviewRoutes');
+tourRoutes.use('/:tourId/reviews', reviewRouter);
+
 tourRoutes.param('id', (req, res, next, val) => {
   console.log(val);
   next();
@@ -22,4 +25,5 @@ tourRoutes
     authController.restrictTo('admin'),
     tourController.deleteTour
   );
+
 module.exports = tourRoutes;

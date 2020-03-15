@@ -25,7 +25,7 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
   });
 });
 exports.getTour = catchAsync(async (req, res, next) => {
-  const tour = await tourModel.findById(req.params.id);
+  const tour = await tourModel.findById(req.params.id).populate('reviews');
   if (!tour) {
     return next(new appError('No tour defined with this id'));
   }
