@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const rateLimit = require('express-rate-limit');
 const tourRoutes = require('./routes/tourRoutes');
 const cors = require('cors');
@@ -11,6 +12,8 @@ const userRoutes = require('./routes/userRoutes');
 const globalErrorHandler = require('./controllers/errorController');
 const appError = require('./utils/appError');
 const app = express();
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
 app.use(helmet());
 const limiter = rateLimit({
   max: 100,
@@ -18,7 +21,7 @@ const limiter = rateLimit({
   message: 'Too many request please try after an hour'
 });
 app.use('/api', limiter);
-app.use(express.static(`${__dirname}/public`));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 app.use(
   hpp({
@@ -38,6 +41,12 @@ app.use(express.json());
 app.use((req, res, next) => {
   req.requestedAt = new Date().toLocaleString();
   next();
+});
+app.get('/', (req, res) => {
+  res.status(200).render('base', {
+    tour: 'The Forest Tiger',
+    user: 'Arpit'
+  });
 });
 
 app.use('/api/v1/tours', tourRoutes);
