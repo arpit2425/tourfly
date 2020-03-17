@@ -1,7 +1,7 @@
 doctype html
 html
   head
-   title TourFly | Exciting tours for adventurous people
+   title TourFly | #{title}
    link(rel="stylesheet" href="css/style.css")
    link(rel="shortcut icon" href="img/favicon.png")
    link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Lato:300,300i,700')
@@ -9,8 +9,8 @@ html
    meta(name="viewport" content="width=device-width, initial-scale=1.0")
   body
    include _header
-   main.main
-    h1 Main
+   block content
+    h1 This is placeholder
    include _footer
 
   

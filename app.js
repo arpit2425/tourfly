@@ -5,6 +5,7 @@ const tourRoutes = require('./routes/tourRoutes');
 const cors = require('cors');
 const helmet = require('helmet');
 const reviewRoutes = require('./routes/reviewRoutes');
+const viewRoutes = require('./routes/viewRoutes');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const mongoSanitize = require('express-mongo-sanitize');
@@ -42,13 +43,7 @@ app.use((req, res, next) => {
   req.requestedAt = new Date().toLocaleString();
   next();
 });
-app.get('/', (req, res) => {
-  res.status(200).render('base', {
-    tour: 'The Forest Tiger',
-    user: 'Arpit'
-  });
-});
-
+app.use('/', viewRoutes);
 app.use('/api/v1/tours', tourRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/reviews', reviewRoutes);
