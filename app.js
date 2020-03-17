@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const rateLimit = require('express-rate-limit');
+const cookieparser = require('cookie-parser');
 const tourRoutes = require('./routes/tourRoutes');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -23,6 +24,7 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cookieparser());
 app.use(cors());
 app.use(
   hpp({
@@ -41,6 +43,8 @@ app.use(mongoSanitize());
 app.use(express.json());
 app.use((req, res, next) => {
   req.requestedAt = new Date().toLocaleString();
+  console.log(req.cookies);
+
   next();
 });
 app.use('/', viewRoutes);

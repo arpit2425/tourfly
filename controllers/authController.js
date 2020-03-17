@@ -60,6 +60,8 @@ exports.protect = catchAsync(async (req, res, next) => {
     req.headers.authorization.startsWith('Bearer')
   ) {
     token = req.headers.authorization.split(' ')[1];
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt;
   }
   if (!token) {
     return next(new appError('You are not logged in ! Please log in', 401));
@@ -74,6 +76,25 @@ exports.protect = catchAsync(async (req, res, next) => {
     return next(new appError('Password is changed', 401));
   }
   req.user = freshUser;
+  next();
+});
+exports.isLoggedIn = catchAsync(async (req, res, next) => {
+  if (req.cookies.jwt) {
+    const decode = await promisify(jwt.verify)(
+      req.cookies.jwt,
+      process.env.jwtToken
+    );
+
+    const freshUser = await user.findById(decode.id);
+    if (!freshUser) {
+      return next();
+    }
+    if (freshUser.changedPasswordAfter(decode.iat)) {
+      return next();
+    }
+    res.locals.user = freshUser;
+    return next();
+  }
   next();
 });
 exports.restrictTo = (...roles) => {
