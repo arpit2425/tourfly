@@ -44,7 +44,6 @@ app.use(mongoSanitize());
 app.use(express.json());
 app.use((req, res, next) => {
   req.requestedAt = new Date().toLocaleString();
-  console.log(req.cookies);
 
   next();
 });
