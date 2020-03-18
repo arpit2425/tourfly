@@ -25,6 +25,7 @@ const limiter = rateLimit({
 app.use('/api', limiter);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieparser());
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cors());
 app.use(
   hpp({

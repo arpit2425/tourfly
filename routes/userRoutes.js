@@ -4,6 +4,7 @@ const userController = require('./../controllers/userController');
 const authController = require('./../controllers/authController');
 userRoutes.route('/signup').post(authController.signup);
 userRoutes.post('/login', authController.login);
+userRoutes.get('/logout', authController.logout);
 userRoutes.post('/forgetPassword', authController.forgetPassword);
 userRoutes.patch('/resetPassword/:token', authController.resetPassword);
 userRoutes.use(authController.protect);

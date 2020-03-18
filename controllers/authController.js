@@ -76,27 +76,39 @@ exports.protect = catchAsync(async (req, res, next) => {
     return next(new appError('Password is changed', 401));
   }
   req.user = freshUser;
+  res.locals.user = freshUser;
   next();
 });
-exports.isLoggedIn = catchAsync(async (req, res, next) => {
-  if (req.cookies.jwt) {
-    const decode = await promisify(jwt.verify)(
-      req.cookies.jwt,
-      process.env.jwtToken
-    );
+exports.logout = (req, res) => {
+  res.cookie('jwt', 'loggedout', {
+    expires: new Date(Date.now() + 2 * 1000),
+    httpOnly: true
+  });
+  res.status(200).json({ status: 'success' });
+};
+exports.isLoggedIn = async (req, res, next) => {
+  try {
+    if (req.cookies.jwt) {
+      const decode = await promisify(jwt.verify)(
+        req.cookies.jwt,
+        process.env.jwtToken
+      );
 
-    const freshUser = await user.findById(decode.id);
-    if (!freshUser) {
+      const freshUser = await user.findById(decode.id);
+      if (!freshUser) {
+        return next();
+      }
+      if (freshUser.changedPasswordAfter(decode.iat)) {
+        return next();
+      }
+      res.locals.user = freshUser;
       return next();
     }
-    if (freshUser.changedPasswordAfter(decode.iat)) {
-      return next();
-    }
-    res.locals.user = freshUser;
+  } catch (err) {
     return next();
   }
   next();
-});
+};
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {

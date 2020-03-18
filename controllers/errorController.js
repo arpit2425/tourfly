@@ -1,11 +1,18 @@
 const appError = require('./../utils/appError');
-const ErrorDev = (err, res) => {
-  res.status(err.statusCode).json({
-    status: err.status,
-    error: err,
-    stack: err.stack,
-    message: err.message
-  });
+const ErrorDev = (err, req, res) => {
+  if (req.originalUrl.startsWith('/api')) {
+    res.status(err.statusCode).json({
+      status: err.status,
+      error: err,
+      stack: err.stack,
+      message: err.message
+    });
+  } else {
+    res.status(err.statusCode).render('error', {
+      title: 'Something went wrong!',
+      msg: err.message
+    });
+  }
 };
 const handleCastDb = err => {
   message = `Invalid ${err.path}: ${err.value}`;
@@ -34,17 +41,29 @@ const handleDuplicatekey = err => {
   return new appError(message, 400);
 };
 //
-const ErrorProd = (err, res) => {
-  if (err.isOperational) {
-    res.status(err.statusCode).json({
-      status: err.status,
+const ErrorProd = (err, req, res) => {
+  if (req.originalUrl.startsWith('/api')) {
+    if (err.isOperational) {
+      return res.status(err.statusCode).json({
+        status: err.status,
 
-      message: err.message
-    });
-  } else {
+        message: err.message
+      });
+    }
     res.status(500).json({
       status: 'Error',
       message: 'Something Went Wrong'
+    });
+  } else {
+    if (err.isOperational) {
+      return res.status(err.statusCode).render('error', {
+        title: 'Something went wrong!',
+        msg: err.message
+      });
+    }
+    return res.status(err.statusCode).render('error', {
+      title: 'Something went wrong!',
+      msg: 'Please try after some time'
     });
   }
 };
@@ -54,15 +73,16 @@ module.exports = (err, req, res, next) => {
   err.status = err.status || 'error';
 
   if (process.env.NODE_ENV === 'development') {
-    ErrorDev(err, res);
+    ErrorDev(err, req, res);
   } else if (process.env.NODE_ENV === 'production') {
     let error = { ...err };
+    error.message = err.message;
     if (err.name === 'CastError') error = handleCastDb(error);
     if (err.name === 'ValidationError') error = handleValidationErrorDb(error);
     if (error.code === 11000) error = handleDuplicatekey(error);
     if (error.name === 'JsonWebTokenError') error = handleTokenError(error);
     if (error.name === 'TokenExpiredError')
       error = handleExpiredTokenError(error);
-    ErrorProd(error, res);
+    ErrorProd(error, req, res);
   }
 };
