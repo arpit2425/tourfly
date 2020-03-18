@@ -18,6 +18,7 @@ userRoutes.patch(
 userRoutes.patch(
   '/updateMe',
   userController.uploadPhoto,
+  userController.resizePhoto,
   userController.updateMe
 );
 userRoutes.delete('/deleteMe', userController.deleteMe);
