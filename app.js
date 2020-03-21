@@ -3,6 +3,7 @@ const path = require('path');
 const rateLimit = require('express-rate-limit');
 const cookieparser = require('cookie-parser');
 const tourRoutes = require('./routes/tourRoutes');
+const bookingRoutes = require('./routes/bookingRoutes');
 const cors = require('cors');
 const helmet = require('helmet');
 const reviewRoutes = require('./routes/reviewRoutes');
@@ -51,6 +52,7 @@ app.use('/', viewRoutes);
 app.use('/api/v1/tours', tourRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/reviews', reviewRoutes);
+app.use('/api/v1/bookings', bookingRoutes);
 app.all('*', (req, res, next) => {
   // const err = new Error('Route not defined');
   // err.status = 'Fail';
