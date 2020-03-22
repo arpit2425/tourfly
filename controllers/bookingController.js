@@ -1,12 +1,12 @@
 // const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const stripe = require('stripe')('sk_test_lL5ZMfEFLi5bEIPnPMJLxwf400quBLusHf')
-const Tour = require('../models/tourModel')
-const Booking = require('../models/bookingModel')
-const catchAsync = require('../utils/catchAsync')
-const factory = require('./handlerFactory')
+const stripe = require('stripe')('sk_test_lL5ZMfEFLi5bEIPnPMJLxwf400quBLusHf');
+const Tour = require('../models/tourModel');
+const Booking = require('../models/bookingModel');
+const catchAsync = require('../utils/catchAsync');
+const factory = require('./handlerFactory');
 
 exports.getCheckoutSession = catchAsync(async (req, res) => {
-  const tour = await Tour.findById(req.params.tourId)
+  const tour = await Tour.findById(req.params.tourId);
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
     success_url: `${req.protocol}://${req.get('host')}/?tour=${
@@ -26,27 +26,27 @@ exports.getCheckoutSession = catchAsync(async (req, res) => {
         quantity: 1
       }
     ]
-  })
+  });
 
   res.status(200).json({
     status: 'Success',
     session
-  })
-})
+  });
+});
 exports.createBookingCheckout = catchAsync(async (req, res, next) => {
   // This is only TEMPORARY, because it's UNSECURE: everyone can make bookings without paying
-  let tour = req.query.tour
-  let user = req.query.user
-  let price = req.query.price
-  console.log(tour, user, price)
-  if (!tour && !user && !price) return next()
-  await Booking.create({ tour, user, price })
+  let tour = req.query.tour;
+  let user = req.query.user;
+  let price = req.query.price;
 
-  res.redirect(req.originalUrl.split('?')[0])
-})
+  if (!tour && !user && !price) return next();
+  await Booking.create({ tour, user, price });
 
-exports.createBooking = factory.createOne(Booking)
-exports.getBooking = factory.getOne(Booking)
-exports.getAllBookings = factory.getAll(Booking)
-exports.updateBooking = factory.updateOne(Booking)
-exports.deleteBooking = factory.deleteOne(Booking)
+  res.redirect(req.originalUrl.split('?')[0]);
+});
+
+exports.createBooking = factory.createOne(Booking);
+exports.getBooking = factory.getOne(Booking);
+exports.getAllBookings = factory.getAll(Booking);
+exports.updateBooking = factory.updateOne(Booking);
+exports.deleteBooking = factory.deleteOne(Booking);

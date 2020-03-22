@@ -1,4 +1,5 @@
 import { login, logout } from './login';
+import { signup } from './signup';
 import { updateSettings } from './updateSettings';
 import { displayMap } from './mapbox';
 import { bookTour } from './stripe';
@@ -6,6 +7,7 @@ import '@babel/polyfill';
 const mapBox = document.getElementById('map');
 
 const loginForm = document.querySelector('.form--login');
+const signupForm = document.querySelector('.form--signup');
 const logoutbtn = document.querySelector('.nav__el--logout');
 const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
@@ -20,6 +22,23 @@ if (loginForm) {
     const email = document.querySelector('#email').value;
     const password = document.querySelector('#password').value;
     login(email, password);
+  });
+}
+if (signupForm) {
+  signupForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const name = document.querySelector('#name').value;
+    const email = document.querySelector('#emailS').value;
+    const password = document.querySelector('#passwordS').value;
+    const passwordConfirm = document.querySelector('#passwordConfirmS').value;
+    if (password != passwordConfirm) {
+      alert("Password Doesn't match");
+      return;
+    }
+
+    signup(name, email, password, passwordConfirm);
+
+    // login(email, password);
   });
 }
 if (logoutbtn) {

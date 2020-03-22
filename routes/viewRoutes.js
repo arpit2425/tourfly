@@ -11,6 +11,7 @@ app.get(
 );
 app.get('/tour/:slug', authController.isLoggedIn, viewController.gettour);
 app.get('/login', authController.isLoggedIn, viewController.login);
+app.get('/signup', authController.isLoggedIn, viewController.signup);
 app.get('/me', authController.protect, viewController.getAccount);
 app.get('/my-tours', authController.protect, viewController.getMyTours);
 app.post(
