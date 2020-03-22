@@ -11,3 +11,7 @@ A tour website built using technologies :
 ## Mongoose
 
 ## Stripe
+
+# How to use
+
+Run command "npm run start"
