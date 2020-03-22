@@ -5,6 +5,7 @@ const cookieparser = require('cookie-parser');
 const compression = require('compression');
 const tourRoutes = require('./routes/tourRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
+const bookingController = require('./controllers/bookingController');
 const cors = require('cors');
 const helmet = require('helmet');
 const reviewRoutes = require('./routes/reviewRoutes');
@@ -25,6 +26,11 @@ const limiter = rateLimit({
   windowMs: 60 * 60 * 1000,
   message: 'Too many request please try after an hour'
 });
+app.post(
+  '/webhook-checkout',
+  express.raw({ type: 'application/json' }),
+  bookingController.webhookCheckout
+);
 app.use('/api', limiter);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieparser());
@@ -57,6 +63,7 @@ app.use('/api/v1/tours', tourRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/reviews', reviewRoutes);
 app.use('/api/v1/bookings', bookingRoutes);
+
 app.all('*', (req, res, next) => {
   // const err = new Error('Route not defined');
   // err.status = 'Fail';
