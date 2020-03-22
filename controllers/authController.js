@@ -6,16 +6,16 @@ const appError = require('./../utils/appError');
 const sendEmail = require('./../utils/email');
 const jwt = require('jsonwebtoken');
 const Email = require('./../utils/email');
-const createSendToken = (user, statusCode, res) => {
+const createSendToken = (user, statusCode, req, res) => {
   const token = sendToken(user._id);
-  const options = {
+
+  res.cookie('jwt', token, {
     expires: new Date(
       Date.now() + process.env.cookieexpiresIn * 24 * 60 * 60 * 1000
     ),
-    httpOnly: true
-  };
-  if (process.env.NODE_ENV === 'production') options.secure = true;
-  res.cookie('jwt', token, options);
+    httpOnly: true,
+    secure: req.secure || req.headers('x-forwarded-proto') === 'https'
+  });
   user.password = undefined;
   res.status(statusCode).json({
     status: 'Success',
@@ -39,7 +39,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   });
   const url = `${req.protocol}://${req.get('host')}/me`;
   await new Email(newuser, url).sendWelcome();
-  createSendToken(newuser, 201, res);
+  createSendToken(newuser, 201, req, res);
 });
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
@@ -51,7 +51,7 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new appError('Please Provide correct Email and password', 401));
   }
 
-  createSendToken(user, 200, res);
+  createSendToken(user, 200, req, res);
 });
 exports.protect = catchAsync(async (req, res, next) => {
   let token;
@@ -158,7 +158,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   getuser.passwordResetToken = undefined;
   getuser.passwordResetExpires = undefined;
   await getuser.save();
-  createSendToken(getuser, 200, res);
+  createSendToken(getuser, 200, req, res);
 });
 exports.updatePassword = catchAsync(async (req, res, next) => {
   if (
@@ -183,5 +183,5 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   getuser.password = req.body.newpassword;
   getuser.passwordConfirm = req.body.newpasswordconfirm;
   await getuser.save();
-  createSendToken(getuser, 200, res);
+  createSendToken(getuser, 200, req, res);
 });
