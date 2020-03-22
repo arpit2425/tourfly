@@ -30,6 +30,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieparser());
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cors());
+app.options('*', cors());
 app.use(
   hpp({
     whitelist: [
