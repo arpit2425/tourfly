@@ -6,7 +6,6 @@ const reviewRouter = require('./../routes/reviewRoutes');
 tourRoutes.use('/:tourId/reviews', reviewRouter);
 
 tourRoutes.param('id', (req, res, next, val) => {
-  console.log(val);
   next();
 });
 tourRoutes.route('/tour-stats').get(tourController.getTourStat);

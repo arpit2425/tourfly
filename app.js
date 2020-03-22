@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const rateLimit = require('express-rate-limit');
 const cookieparser = require('cookie-parser');
+const compression = require('compression');
 const tourRoutes = require('./routes/tourRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const cors = require('cors');
@@ -40,6 +41,7 @@ app.use(
     ]
   })
 );
+app.use(compression());
 app.use(xss());
 app.use(mongoSanitize());
 app.use(express.json());
