@@ -1298,6 +1298,9 @@ a.nav__el {
   nav.nav.nav--tours {
     margin-bottom: 0.5rem;
   }
+  .section-header {
+    height: 50vw;
+  }
 }
 @media only screen and (max-width: 62.5em) {
   .header {
@@ -1316,6 +1319,11 @@ a.nav__el {
   }
   .nav--user {
     margin-bottom: 2rem;
+  }
+}
+@media only screen and (max-width: 54.5em) {
+  .section-header {
+    height: 60vw;
   }
 }
 @media only screen and (max-width: 50em) {
@@ -1339,9 +1347,35 @@ a.nav__el {
     justify-self: center;
   }
 }
+@media only screen and (max-width: 42.25em) {
+  .section-header {
+    height: 100vh;
+  }
+  .section-description {
+    display: flex;
+    flex-direction: column;
+  }
+  .section-description > * {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .disk {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+}
 @media only screen and (max-width: 37.5em) {
   .user-view {
     flex-direction: column;
+  }
+  .disk {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .description-box {
+    padding-top: 30px;
   }
   .nav--tours {
     margin-bottom: 0;
@@ -1400,7 +1434,13 @@ a.nav__el {
     font-size: 2rem;
   }
 }
-@media only screen and (max-width: 26.25em) {
+@media only screen and (max-width: 27em) {
+  .heading-primary {
+    font-size: 4rem;
+  }
+  .heading-box {
+    left: 40%;
+  }
   .nav--user {
     width: 80%;
   }
