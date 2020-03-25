@@ -1364,6 +1364,20 @@ a.nav__el {
     justify-content: space-between;
     width: 100%;
   }
+  .cta {
+    display: flex;
+    height: 50%;
+    flex-direction: column;
+    padding: 2rem 1rem 1rem 21rem;
+  }
+  #book-tour {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+  .cta__content {
+    display: flex;
+    flex-direction: column;
+  }
 }
 @media only screen and (max-width: 37.5em) {
   .user-view {
@@ -1433,13 +1447,28 @@ a.nav__el {
   .footer__nav li {
     font-size: 2rem;
   }
+  .cta {
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 1fr 1fr;
+    padding-left: 3rem;
+  }
+  .cta__img {
+    grid-row: 1/2;
+    grid-column: 1/2;
+  }
+  .cta__content {
+    grid-row: 2/3;
+    grid-column: 1/2;
+    margin-top: 3rem;
+  }
 }
 @media only screen and (max-width: 27em) {
   .heading-primary {
     font-size: 4rem;
   }
   .heading-box {
-    left: 40%;
+    left: 50%;
   }
   .nav--user {
     width: 80%;
