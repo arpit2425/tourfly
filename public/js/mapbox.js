@@ -43,4 +43,5 @@ export const displayMap = locations => {
       right: 100
     }
   });
+  map['dragPan'].disable();
 };
