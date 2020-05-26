@@ -12,6 +12,21 @@ A tour website built using technologies :
 
 ## Stripe
 
+# Functionalities
+
+## Image upload
+
+## Mail notification
+
+## User Authentication
+
+## Stripe Payment
+
+## Map View
+
+
+
+
 # How to use
 
 Run command "npm run start"
